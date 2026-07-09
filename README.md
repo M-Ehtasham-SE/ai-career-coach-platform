@@ -76,7 +76,8 @@ ai-career-coach-platform/
 **Muhammad Ehtasham**  
 Intern, Tynovate Studio  
 FAST-NUCES (4th Semester)  
-[GitHub](https://github.com/M-Ehtasham-SE) | [LinkedIn](https://www.linkedin.com/in/m-ehtasham-974494344/)
+[GitHub] (https://github.com/M-Ehtasham-SE) | [LinkedIn] (https://www.linkedin.com/in/m-ehtasham-974494344/)
+
 
 ## 📝 License
 
