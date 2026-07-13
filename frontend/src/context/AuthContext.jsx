@@ -8,35 +8,44 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check local storage for existing session
-    const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('token');
-    if (storedUser && storedToken) {
-      try {
+    // Restore session from localStorage on app start
+    try {
+      const storedUser = localStorage.getItem('user');
+      const storedToken = localStorage.getItem('token');
+      if (storedUser && storedToken) {
         setUser(JSON.parse(storedUser));
-      } catch (e) {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
       }
+    } catch (e) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
     }
     setLoading(false);
   }, []);
 
+  /**
+   * Helper: persist token + user from a backend ApiResponse wrapper.
+   * Backend shape: { status, message, data: { token, tokenType, expiresIn, user } }
+   */
+  const persistSession = (apiResponse) => {
+    const { token, user: userData } = apiResponse.data;
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  };
+
   const login = async (email, password) => {
     setLoading(true);
     try {
-      const response = await authService.login(email, password);
-      // Backend returns: data: { token, expiresIn, user: { id, email, fullName, role } }
-      if (response && response.data) {
-        const { token, user: userData } = response.data;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(userData));
-        setUser(userData);
+      // authService.login returns the parsed JSON body (Axios unwraps .data automatically)
+      const apiResponse = await authService.login(email, password);
+      if (apiResponse?.status === 'success' && apiResponse?.data?.token) {
+        persistSession(apiResponse);
         return { success: true };
       }
-      return { success: false, message: 'Invalid response from server' };
+      return { success: false, message: apiResponse?.message || 'Login failed.' };
     } catch (error) {
-      const message = error.response?.data?.message || 'Login failed. Please check your credentials.';
+      const message =
+        error.response?.data?.message || 'Login failed. Please check your credentials.';
       return { success: false, message };
     } finally {
       setLoading(false);
@@ -46,14 +55,16 @@ export const AuthProvider = ({ children }) => {
   const register = async (fullName, email, password) => {
     setLoading(true);
     try {
-      const response = await authService.register(fullName, email, password);
-      // After registration, immediately log in the user using the same credentials
-      if (response && response.status === 'success') {
-        return await login(email, password);
+      // Register also returns a JWT token directly — no need for a second login call
+      const apiResponse = await authService.register(fullName, email, password);
+      if (apiResponse?.status === 'success' && apiResponse?.data?.token) {
+        persistSession(apiResponse);
+        return { success: true };
       }
-      return { success: false, message: response.message || 'Registration failed' };
+      return { success: false, message: apiResponse?.message || 'Registration failed.' };
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed. Please try again.';
+      const message =
+        error.response?.data?.message || 'Registration failed. Please try again.';
       return { success: false, message };
     } finally {
       setLoading(false);
@@ -61,14 +72,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    setLoading(true);
     try {
       await authService.logout();
+    } catch (_) {
+      // ignore server-side logout errors
     } finally {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       setUser(null);
-      setLoading(false);
     }
   };
 
