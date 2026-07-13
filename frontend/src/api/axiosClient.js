@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+// Use relative URL so requests go through Vite proxy (avoids CORS in dev)
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: '/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -16,20 +17,18 @@ axiosClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Handle auth errors (e.g. token expired)
+// Response Interceptor: Handle 401 Unauthorized (expired/invalid token)
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Clear local storage and redirect if auth fails
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+      const path = window.location.pathname;
+      if (path !== '/login' && path !== '/register') {
         window.location.href = '/login';
       }
     }

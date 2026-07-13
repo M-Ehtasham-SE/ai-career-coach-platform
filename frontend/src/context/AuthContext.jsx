@@ -1,14 +1,13 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import authService from '../services/authService';
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Restore session from localStorage on app start
     try {
       const storedUser = localStorage.getItem('user');
       const storedToken = localStorage.getItem('token');
@@ -22,10 +21,6 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  /**
-   * Helper: persist token + user from a backend ApiResponse wrapper.
-   * Backend shape: { status, message, data: { token, tokenType, expiresIn, user } }
-   */
   const persistSession = (apiResponse) => {
     const { token, user: userData } = apiResponse.data;
     localStorage.setItem('token', token);
@@ -36,7 +31,6 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoading(true);
     try {
-      // authService.login returns the parsed JSON body (Axios unwraps .data automatically)
       const apiResponse = await authService.login(email, password);
       if (apiResponse?.status === 'success' && apiResponse?.data?.token) {
         persistSession(apiResponse);
@@ -55,7 +49,6 @@ export const AuthProvider = ({ children }) => {
   const register = async (fullName, email, password) => {
     setLoading(true);
     try {
-      // Register also returns a JWT token directly — no need for a second login call
       const apiResponse = await authService.register(fullName, email, password);
       if (apiResponse?.status === 'success' && apiResponse?.data?.token) {
         persistSession(apiResponse);
@@ -75,7 +68,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await authService.logout();
     } catch (_) {
-      // ignore server-side logout errors
+      // ignore
     } finally {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
@@ -88,12 +81,4 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };
