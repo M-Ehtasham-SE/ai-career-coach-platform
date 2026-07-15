@@ -156,6 +156,22 @@ public class User implements UserDetails {
     }
 
     // ============================================
+    // Setters (for profile / password updates)
+    // ============================================
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    // ============================================
     // Builder
     // ============================================
 

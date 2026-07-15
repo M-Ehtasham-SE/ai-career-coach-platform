@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import resumeService from '../services/resumeService';
+import scoreService from '../services/scoreService';
+import ScoreDisplay from '../components/ScoreDisplay';
 import { 
   ArrowLeft, 
   UploadCloud, 
@@ -12,7 +14,8 @@ import {
   Clock, 
   Calendar, 
   Loader,
-  Sparkles
+  Sparkles,
+  Award
 } from 'lucide-react';
 
 const ResumeUploadPage = () => {
@@ -24,6 +27,9 @@ const ResumeUploadPage = () => {
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  
+  const [scoringResumeId, setScoringResumeId] = useState(null);
+  const [activeScore, setActiveScore] = useState(null);
   
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -142,6 +148,38 @@ const ResumeUploadPage = () => {
     } catch (err) {
       console.error('Error deleting resume:', err);
       setError('Failed to delete the resume.');
+    }
+  };
+
+  const handleScore = async (id) => {
+    setScoringResumeId(id);
+    setActiveScore(null);
+    setError('');
+    
+    try {
+      // First try to fetch existing score
+      try {
+        const existingScoreResponse = await scoreService.getLatestScore(id);
+        if (existingScoreResponse && existingScoreResponse.status === 'success') {
+          setActiveScore(existingScoreResponse.data);
+          setScoringResumeId(null);
+          return;
+        }
+      } catch (err) {
+        // If 404 Not Found, it means no score exists yet, so we proceed to score it.
+        // Other errors will be caught by the outer try-catch.
+      }
+
+      // If no score exists, trigger scoring
+      const scoreResponse = await scoreService.scoreResume(id, "Software Engineer"); // Defaulting role for now
+      if (scoreResponse && scoreResponse.status === 'success') {
+        setActiveScore(scoreResponse.data);
+      }
+    } catch (err) {
+      console.error('Error scoring resume:', err);
+      setError(err.response?.data?.message || 'Failed to score the resume.');
+    } finally {
+      setScoringResumeId(null);
     }
   };
 
@@ -331,13 +369,27 @@ const ResumeUploadPage = () => {
                         )}
                       </div>
                       
-                      <button
-                        onClick={() => handleDelete(resume.id)}
-                        className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-500 hover:text-rose-400 hover:border-rose-500/20 transition-all shrink-0 self-center"
-                        title="Delete resume"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center gap-2 shrink-0 self-center">
+                        <button
+                          onClick={() => handleScore(resume.id)}
+                          disabled={scoringResumeId === resume.id}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 transition-all text-xs font-semibold disabled:opacity-50"
+                        >
+                          {scoringResumeId === resume.id ? (
+                            <Loader className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <Award className="w-3.5 h-3.5" />
+                          )}
+                          <span>{scoringResumeId === resume.id ? 'Scoring...' : 'Score'}</span>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(resume.id)}
+                          className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-500 hover:text-rose-400 hover:border-rose-500/20 transition-all"
+                          title="Delete resume"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   ))
                 )}
@@ -345,6 +397,13 @@ const ResumeUploadPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Score Display Area */}
+        {activeScore && (
+          <div className="mt-8">
+            <ScoreDisplay scoreData={activeScore} />
+          </div>
+        )}
       </div>
     </div>
   );
