@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
-import { LogOut, User, Mail, Shield, Calendar, Sparkles } from 'lucide-react';
+import { LogOut, User, Mail, Shield, Calendar, Sparkles, FileText, Award, Target, MessageSquare } from 'lucide-react';
 
 const DashboardPage = () => {
   const { user, logout } = useAuth();
@@ -60,7 +61,7 @@ const DashboardPage = () => {
           </div>
 
           {/* User Details Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800/80 pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800/80 pt-6 mb-8">
             <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-950/40 border border-slate-800/50">
               <User className="w-5 h-5 text-indigo-400 shrink-0" />
               <div className="min-w-0">
@@ -90,6 +91,94 @@ const DashboardPage = () => {
               <div className="min-w-0">
                 <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Joined Date</p>
                 <p className="text-sm font-medium text-slate-200 truncate">{formatDate(user?.createdAt)}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Actions / Core Modules */}
+          <div className="border-t border-slate-800/80 pt-6">
+            <h3 className="text-lg font-bold mb-4 text-left">Your Career Tools</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Resume Management */}
+              <Link 
+                to="/resumes" 
+                className="p-5 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-purple-500/5 border border-indigo-500/20 hover:border-indigo-500/40 hover:from-indigo-500/20 hover:to-purple-500/10 transition-all text-left shadow-md flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-3 shadow-inner">
+                    <FileText className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  </div>
+                  <h4 className="font-bold text-white mb-1">Resume Upload</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Upload and manage PDF/DOCX resumes. Raw text is automatically parsed.
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 mt-4 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  Manage Resumes &rarr;
+                </span>
+              </Link>
+
+              {/* Score Resume */}
+              <div className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700/60 transition-all text-left flex flex-col justify-between opacity-60">
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700/50 flex items-center justify-center text-slate-500 mb-3">
+                    <Award className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-bold text-slate-300 mb-1 flex items-center justify-between">
+                    <span>AI Scoring</span>
+                    <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-500 border border-slate-700">
+                      Soon
+                    </span>
+                  </h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    Get overall scores, top strengths, weaknesses, and suggestions.
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-slate-600 mt-4">
+                  Locked
+                </span>
+              </div>
+
+              {/* Job targeting */}
+              <div className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700/60 transition-all text-left flex flex-col justify-between opacity-60">
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700/50 flex items-center justify-center text-slate-500 mb-3">
+                    <Target className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-bold text-slate-300 mb-1 flex items-center justify-between">
+                    <span>Role Targeting</span>
+                    <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-500 border border-slate-700">
+                      Soon
+                    </span>
+                  </h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    Target roles like Frontend, Backend, UI/UX, and Data Science.
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-slate-600 mt-4">
+                  Locked
+                </span>
+              </div>
+
+              {/* Interview prep */}
+              <div className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700/60 transition-all text-left flex flex-col justify-between opacity-60">
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700/50 flex items-center justify-center text-slate-500 mb-3">
+                    <MessageSquare className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-bold text-slate-300 mb-1 flex items-center justify-between">
+                    <span>Interview Practice</span>
+                    <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-500 border border-slate-700">
+                      Soon
+                    </span>
+                  </h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    Simulate AI-driven job interviews with role-specific questions.
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-slate-600 mt-4">
+                  Locked
+                </span>
               </div>
             </div>
           </div>

@@ -38,8 +38,13 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: false, message: apiResponse?.message || 'Login failed.' };
     } catch (error) {
-      const message =
-        error.response?.data?.message || 'Login failed. Please check your credentials.';
+      console.error('Login error:', error);
+      let message = 'Login failed. Please check your credentials.';
+      if (error.response?.data?.message) {
+        message = error.response.data.message;
+      } else if (error.message) {
+        message = `Error: ${error.message}`;
+      }
       return { success: false, message };
     } finally {
       setLoading(false);
@@ -56,8 +61,13 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: false, message: apiResponse?.message || 'Registration failed.' };
     } catch (error) {
-      const message =
-        error.response?.data?.message || 'Registration failed. Please try again.';
+      console.error('Registration error:', error);
+      let message = 'Registration failed. Please try again.';
+      if (error.response?.data?.message) {
+        message = error.response.data.message;
+      } else if (error.message) {
+        message = `Error: ${error.message}`;
+      }
       return { success: false, message };
     } finally {
       setLoading(false);

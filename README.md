@@ -48,23 +48,23 @@ ai-career-coach-platform/
 │ └── test/
 └── README.md
 
-## 📊 Week 1 Status
+## 📊 Project Progress Status
 
 | Deliverable | Status |
 |-------------|--------|
-| Project Planning | 🟡 In Progress |
-| Database Schema | 🟡 In Progress |
-| API Endpoint Plan | 🟡 In Progress |
-| UI Wireframes | 🟡 In Progress |
-| GitHub Setup | ✅ Complete |
+| Project Planning & Design | ✅ Complete |
+| Database Schema & API Plan | ✅ Complete |
+| Authentication System (JWT) | ✅ Complete |
+| Resume Upload & Text Extraction (Apache Tika) | ✅ Complete |
+| React Interactive UI & Dashboard | ✅ Complete |
 
 ## 📅 8-Week Timeline
 
 | Week | Deliverable | Status |
 |------|-------------|--------|
-| 1 | Planning and UI Wireframing | 🔄 In Progress |
-| 2 | Frontend and Authentication | ⏳ Pending |
-| 3 | Backend and Database | ⏳ Pending |
+| 1 | Planning and UI Wireframing | ✅ Complete |
+| 2 | Frontend and Authentication | ✅ Complete |
+| 3 | Resume Upload & Backend Core | ✅ Complete |
 | 4 | Resume Score System | ⏳ Pending |
 | 5 | Job Role Targeting | ⏳ Pending |
 | 6 | Interview Practice Module | ⏳ Pending |
