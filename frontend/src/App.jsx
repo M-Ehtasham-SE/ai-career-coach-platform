@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ResumeUploadPage from './pages/ResumeUploadPage';
+import ResumeScoringPage from './pages/ResumeScoringPage';
 
 function App() {
   return (
@@ -27,6 +28,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ResumeUploadPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/score"
+            element={
+              <ProtectedRoute>
+                <ResumeScoringPage />
               </ProtectedRoute>
             }
           />

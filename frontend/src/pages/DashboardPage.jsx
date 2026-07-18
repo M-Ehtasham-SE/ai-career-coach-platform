@@ -118,26 +118,25 @@ const DashboardPage = () => {
                 </span>
               </Link>
 
-              {/* Score Resume */}
-              <div className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700/60 transition-all text-left flex flex-col justify-between opacity-60">
+              {/* Score Resume — ACTIVE */}
+              <Link
+                to="/score"
+                id="dashboard-score-card"
+                className="p-5 rounded-2xl bg-gradient-to-br from-amber-500/10 to-orange-500/5 border border-amber-500/20 hover:border-amber-500/40 hover:from-amber-500/20 hover:to-orange-500/10 transition-all text-left shadow-md flex flex-col justify-between group"
+              >
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700/50 flex items-center justify-center text-slate-500 mb-3">
-                    <Award className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-3 shadow-inner">
+                    <Award className="w-5 h-5 group-hover:scale-110 transition-transform" />
                   </div>
-                  <h4 className="font-bold text-slate-300 mb-1 flex items-center justify-between">
-                    <span>AI Scoring</span>
-                    <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-500 border border-slate-700">
-                      Soon
-                    </span>
-                  </h4>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Get overall scores, top strengths, weaknesses, and suggestions.
+                  <h4 className="font-bold text-white mb-1">AI Scoring</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Get overall scores, top strengths, weaknesses, and actionable suggestions.
                   </p>
                 </div>
-                <span className="text-xs font-semibold text-slate-600 mt-4">
-                  Locked
+                <span className="text-xs font-semibold text-amber-400 hover:text-amber-300 mt-4 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  Analyze Resume &rarr;
                 </span>
-              </div>
+              </Link>
 
               {/* Job targeting */}
               <div className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700/60 transition-all text-left flex flex-col justify-between opacity-60">

@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       // Proxy all /api/v1/* requests to the Spring Boot backend
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://localhost:8081',
         changeOrigin: true,
         secure: false,
       },
