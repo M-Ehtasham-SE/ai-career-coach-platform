@@ -58,6 +58,7 @@ ai-career-coach-platform/
 | Resume Upload & Text Extraction (Apache Tika) | ✅ Complete |
 | React Interactive UI & Dashboard | ✅ Complete |
 | AI Resume Score System | ✅ Complete |
+| AI Job Role Targeting | ✅ Complete |
 
 ## 📅 8-Week Timeline
 
@@ -67,7 +68,7 @@ ai-career-coach-platform/
 | 2 | Frontend and Authentication | ✅ Complete |
 | 3 | Resume Upload & Backend Core | ✅ Complete |
 | 4 | Resume Score System | ✅ Complete |
-| 5 | Job Role Targeting | ⏳ Pending |
+| 5 | Job Role Targeting | ✅ Complete |
 | 6 | Interview Practice Module | ⏳ Pending |
 | 7 | Progress Dashboard and Testing | ⏳ Pending |
 | 8 | Documentation and Final Presentation | ⏳ Pending |
