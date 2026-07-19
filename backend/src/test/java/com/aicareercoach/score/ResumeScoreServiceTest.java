@@ -17,6 +17,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -242,5 +243,75 @@ class ResumeScoreServiceTest {
         assertEquals(2, results.size());
         assertEquals(80, results.get(0).getOverallScore());
         verify(scoreRepository).findByResumeUserIdOrderByScoredAtDesc(ownerId);
+    }
+
+    // ─── getBestScoresPerRole ────────────────────────────────────────────────
+
+    @Test
+    void getBestScoresPerRole_ShouldReturnHighestScorePerRole() {
+        // Arrange — two roles, multiple scores each
+        ResumeScore se1 = new ResumeScore();
+        se1.setJobRole("Software Engineer");
+        se1.setOverallScore(72);
+
+        ResumeScore se2 = new ResumeScore();
+        se2.setJobRole("Software Engineer");
+        se2.setOverallScore(85);
+
+        ResumeScore fe1 = new ResumeScore();
+        fe1.setJobRole("Frontend Developer");
+        fe1.setOverallScore(60);
+
+        ResumeScore fe2 = new ResumeScore();
+        fe2.setJobRole("Frontend Developer");
+        fe2.setOverallScore(68);
+
+        when(scoreRepository.findByResumeUserIdOrderByScoredAtDesc(ownerId))
+                .thenReturn(List.of(se1, se2, fe1, fe2));
+
+        // Act
+        Map<String, Integer> result = scoreService.getBestScoresPerRole(ownerId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(85, result.get("Software Engineer"));
+        assertEquals(68, result.get("Frontend Developer"));
+
+        // Verify sorted descending by value — Software Engineer (85) should come first
+        String firstKey = result.keySet().iterator().next();
+        assertEquals("Software Engineer", firstKey);
+    }
+
+    @Test
+    void getBestScoresPerRole_ShouldReturnEmptyMap_WhenNoScoresExist() {
+        // Arrange
+        when(scoreRepository.findByResumeUserIdOrderByScoredAtDesc(ownerId))
+                .thenReturn(List.of());
+
+        // Act
+        Map<String, Integer> result = scoreService.getBestScoresPerRole(ownerId);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getBestScoresPerRole_ShouldHandleSingleRole() {
+        // Arrange
+        ResumeScore score = new ResumeScore();
+        score.setJobRole("Data Scientist");
+        score.setOverallScore(90);
+
+        when(scoreRepository.findByResumeUserIdOrderByScoredAtDesc(ownerId))
+                .thenReturn(List.of(score));
+
+        // Act
+        Map<String, Integer> result = scoreService.getBestScoresPerRole(ownerId);
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(90, result.get("Data Scientist"));
     }
 }

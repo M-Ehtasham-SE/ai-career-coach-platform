@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ResumeScoreService {
@@ -129,5 +133,30 @@ public class ResumeScoreService {
         }
 
         return scoreRepository.findByResumeIdOrderByScoredAtDesc(resumeId);
+    }
+
+    /**
+     * Returns the highest score achieved by the user for each job role.
+     * E.g., { "Software Engineer": 78, "Frontend Developer": 65, "Data Scientist": 60 }
+     */
+    public Map<String, Integer> getBestScoresPerRole(UUID userId) {
+        List<ResumeScore> allScores = scoreRepository.findByResumeUserIdOrderByScoredAtDesc(userId);
+
+        return allScores.stream()
+                .collect(Collectors.groupingBy(
+                        ResumeScore::getJobRole,
+                        Collectors.collectingAndThen(
+                                Collectors.maxBy(Comparator.comparingInt(ResumeScore::getOverallScore)),
+                                opt -> opt.map(ResumeScore::getOverallScore).orElse(0)
+                        )
+                ))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (a, b) -> a,
+                        LinkedHashMap::new
+                ));
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -88,6 +89,18 @@ public class ResumeScoreController {
         } catch (SecurityException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.error(e.getMessage()));
         }
+    }
+
+    /**
+     * Get the user's best (highest) score for each job role.
+     * GET /api/v1/resumes/scores/best
+     */
+    @GetMapping("/scores/best")
+    public ResponseEntity<ApiResponse<Map<String, Integer>>> getBestScores(
+            @AuthenticationPrincipal User currentUser
+    ) {
+        Map<String, Integer> bestScores = scoreService.getBestScoresPerRole(currentUser.getId());
+        return ResponseEntity.ok(ApiResponse.success(bestScores));
     }
 
     /**
