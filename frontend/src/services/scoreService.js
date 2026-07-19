@@ -32,6 +32,15 @@ const scoreService = {
   async getScoresForResume(resumeId) {
     const response = await axiosClient.get(`/resumes/${resumeId}/scores`);
     return response.data;
+  },
+
+  /**
+   * Gets the highest score achieved for each job role across all resumes.
+   * @returns {Promise<Object>} The API response with the map of best scores by role.
+   */
+  async getBestScores() {
+    const response = await axiosClient.get('/resumes/scores/best');
+    return response.data;
   }
 };
 
