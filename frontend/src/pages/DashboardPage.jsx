@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
+import scoreService from '../services/scoreService';
+import RoleComparisonChart from '../components/RoleComparisonChart';
 import { LogOut, User, Mail, Shield, Calendar, Sparkles, FileText, Award, Target, MessageSquare } from 'lucide-react';
 
 const DashboardPage = () => {
   const { user, logout } = useAuth();
+  const [bestScores, setBestScores] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBestScores = async () => {
+      try {
+        const response = await scoreService.getBestScores();
+        if (response && response.status === 'success' && response.data) {
+          setBestScores(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch best scores:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBestScores();
+  }, []);
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -61,7 +82,7 @@ const DashboardPage = () => {
           </div>
 
           {/* User Details Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800/80 pt-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800/80 pt-6 mb-6">
             <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-950/40 border border-slate-800/50">
               <User className="w-5 h-5 text-indigo-400 shrink-0" />
               <div className="min-w-0">
@@ -93,6 +114,17 @@ const DashboardPage = () => {
                 <p className="text-sm font-medium text-slate-200 truncate">{formatDate(user?.createdAt)}</p>
               </div>
             </div>
+          </div>
+
+          {/* Role Comparison Chart (aggregated metrics) */}
+          <div className="mb-8">
+            {loading ? (
+              <div className="h-32 bg-slate-900/40 border border-slate-800 rounded-2xl flex items-center justify-center text-slate-500 text-sm">
+                Loading targeting statistics...
+              </div>
+            ) : (
+              <RoleComparisonChart bestScores={bestScores} />
+            )}
           </div>
 
           {/* Quick Actions / Core Modules */}
@@ -138,26 +170,26 @@ const DashboardPage = () => {
                 </span>
               </Link>
 
-              {/* Job targeting */}
-              <div className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700/60 transition-all text-left flex flex-col justify-between opacity-60">
+              {/* Job targeting — UNLOCKED */}
+              <Link
+                to="/score"
+                className="p-5 rounded-2xl bg-gradient-to-br from-teal-500/10 to-emerald-500/5 border border-teal-500/20 hover:border-teal-500/40 hover:from-teal-500/20 hover:to-emerald-500/10 transition-all text-left shadow-md flex flex-col justify-between group"
+              >
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700/50 flex items-center justify-center text-slate-500 mb-3">
-                    <Target className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 mb-3 shadow-inner">
+                    <Target className="w-5 h-5 group-hover:scale-110 transition-transform" />
                   </div>
-                  <h4 className="font-bold text-slate-300 mb-1 flex items-center justify-between">
-                    <span>Role Targeting</span>
-                    <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-500 border border-slate-700">
-                      Soon
-                    </span>
+                  <h4 className="font-bold text-white mb-1">
+                    Role Targeting
                   </h4>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Target roles like Frontend, Backend, UI/UX, and Data Science.
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Evaluate and target roles like Frontend Dev, Backend Dev, DevOps, and more.
                   </p>
                 </div>
-                <span className="text-xs font-semibold text-slate-600 mt-4">
-                  Locked
+                <span className="text-xs font-semibold text-teal-400 hover:text-teal-300 mt-4 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  Target Roles &rarr;
                 </span>
-              </div>
+              </Link>
 
               {/* Interview prep */}
               <div className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700/60 transition-all text-left flex flex-col justify-between opacity-60">
@@ -193,3 +225,4 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
+
