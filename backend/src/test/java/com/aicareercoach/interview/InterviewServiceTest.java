@@ -13,6 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.test.util.ReflectionTestUtils;
+import com.aicareercoach.user.Role;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,10 +61,12 @@ class InterviewServiceTest {
         userId = UUID.randomUUID();
         sessionId = UUID.randomUUID();
 
-        testUser = new User();
-        testUser.setId(userId);
-        testUser.setEmail("test@example.com");
-        testUser.setFullName("Test User");
+        testUser = User.builder()
+                .email("test@example.com")
+                .fullName("Test User")
+                .role(Role.USER)
+                .build();
+        ReflectionTestUtils.setField(testUser, "id", userId);
     }
 
     // ─── startSession tests ───────────────────────────────────────────────────
@@ -179,8 +184,12 @@ class InterviewServiceTest {
     @DisplayName("submitAnswer: should reject access when user does not own the session")
     void submitAnswer_ShouldThrowSecurityException_WhenUserNotOwner() {
         // Arrange — session belongs to a different user
-        User anotherUser = new User();
-        anotherUser.setId(UUID.randomUUID());
+        User anotherUser = User.builder()
+                .email("other@example.com")
+                .fullName("Other User")
+                .role(Role.USER)
+                .build();
+        ReflectionTestUtils.setField(anotherUser, "id", UUID.randomUUID());
 
         InterviewSession session = new InterviewSession("Data Scientist", Difficulty.EASY, anotherUser);
         session.setId(sessionId);
