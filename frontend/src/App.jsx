@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ResumeUploadPage from './pages/ResumeUploadPage';
 import ResumeScoringPage from './pages/ResumeScoringPage';
+import InterviewPracticePage from './pages/InterviewPracticePage';
 
 function App() {
   return (
@@ -36,6 +37,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ResumeScoringPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview"
+            element={
+              <ProtectedRoute>
+                <InterviewPracticePage />
               </ProtectedRoute>
             }
           />
