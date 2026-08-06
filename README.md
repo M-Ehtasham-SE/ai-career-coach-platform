@@ -59,6 +59,7 @@ ai-career-coach-platform/
 | React Interactive UI & Dashboard | ✅ Complete |
 | AI Resume Score System | ✅ Complete |
 | AI Job Role Targeting | ✅ Complete |
+| AI Interview Practice System | ✅ Complete |
 
 ## 📅 8-Week Timeline
 
@@ -69,7 +70,7 @@ ai-career-coach-platform/
 | 3 | Resume Upload & Backend Core | ✅ Complete |
 | 4 | Resume Score System | ✅ Complete |
 | 5 | Job Role Targeting | ✅ Complete |
-| 6 | Interview Practice Module | ⏳ Pending |
+| 6 | Interview Practice Module | ✅ Complete |
 | 7 | Progress Dashboard and Testing | ⏳ Pending |
 | 8 | Documentation and Final Presentation | ⏳ Pending |
 
