@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import scoreService from '../services/scoreService';
 import RoleComparisonChart from '../components/RoleComparisonChart';
-import { LogOut, User, Mail, Shield, Calendar, Sparkles, FileText, Award, Target, MessageSquare } from 'lucide-react';
+import { LogOut, User, Mail, Shield, Calendar, Sparkles, FileText, Award, Target, MessageSquare, TrendingUp } from 'lucide-react';
 
 const DashboardPage = () => {
   const { user, logout } = useAuth();
@@ -50,13 +50,23 @@ const DashboardPage = () => {
             <Sparkles className="w-6 h-6 text-indigo-400" />
             <span>Antigravity Career Coach</span>
           </div>
-          <button
-            onClick={logout}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700/80 text-slate-300 hover:text-white transition-all text-sm font-medium border border-slate-700/50"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Sign Out</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/progress"
+              id="header-progress-link"
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 transition-all text-xs font-semibold border border-indigo-500/30"
+            >
+              <TrendingUp className="w-3.5 h-3.5" />
+              <span>Analytics</span>
+            </Link>
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700/80 text-slate-300 hover:text-white transition-all text-sm font-medium border border-slate-700/50"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Sign Out</span>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -208,6 +218,26 @@ const DashboardPage = () => {
                 </div>
                 <span className="text-xs font-semibold text-violet-400 hover:text-violet-300 mt-4 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                   Start Practice →
+                </span>
+              </Link>
+
+              {/* Progress Analytics — UNLOCKED (Week 7) */}
+              <Link
+                to="/progress"
+                id="dashboard-progress-card"
+                className="p-5 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 hover:border-cyan-500/40 hover:from-cyan-500/20 hover:to-blue-500/10 transition-all text-left shadow-md flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-3 shadow-inner">
+                    <TrendingUp className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  </div>
+                  <h4 className="font-bold text-white mb-1">Progress Analytics</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Track your overall career readiness index, score trends, and interview history over time.
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 mt-4 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  View Analytics →
                 </span>
               </Link>
             </div>

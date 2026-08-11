@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage';
 import ResumeUploadPage from './pages/ResumeUploadPage';
 import ResumeScoringPage from './pages/ResumeScoringPage';
 import InterviewPracticePage from './pages/InterviewPracticePage';
+import ProgressDashboardPage from './pages/ProgressDashboardPage';
 
 function App() {
   return (
@@ -45,6 +46,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <InterviewPracticePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/progress"
+            element={
+              <ProtectedRoute>
+                <ProgressDashboardPage />
               </ProtectedRoute>
             }
           />
