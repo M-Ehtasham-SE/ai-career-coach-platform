@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -313,5 +314,29 @@ class ResumeScoreServiceTest {
         // Assert
         assertEquals(1, result.size());
         assertEquals(90, result.get("Data Scientist"));
+    }
+
+    @Test
+    void scoreResume_ShouldThrowIllegalStateException_WhenRawTextIsBlank() {
+        // Arrange
+        resume.setRawText("   ");
+        when(resumeRepository.findById(resumeId)).thenReturn(Optional.of(resume));
+
+        // Act & Assert
+        assertThrows(IllegalStateException.class, () -> scoreService.scoreResume(resumeId, ownerId, "Developer"));
+    }
+
+    @Test
+    void getAllScoresForUser_ShouldReturnEmpty_WhenNoScoresExist() {
+        // Arrange
+        when(scoreRepository.findByResumeUserIdOrderByScoredAtDesc(ownerId))
+                .thenReturn(Collections.emptyList());
+
+        // Act
+        List<ResumeScore> result = scoreService.getAllScoresForUser(ownerId);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 }

@@ -135,4 +135,36 @@ class ResumeServiceTest {
         verify(resumeRepository, never()).save(any());
         verify(fileStorageService, never()).deleteFile(any());
     }
+
+    @Test
+    void getResumeById_ShouldReturnResume_WhenAuthorized() {
+        // Arrange
+        UUID resumeId = UUID.randomUUID();
+        Resume resume = new Resume("resume.pdf", "path/to/resume.pdf", "text", user);
+        ReflectionTestUtils.setField(resume, "id", resumeId);
+
+        when(resumeRepository.findById(resumeId)).thenReturn(Optional.of(resume));
+
+        // Act
+        Resume result = resumeService.getResumeById(resumeId, userId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("resume.pdf", result.getFileName());
+    }
+
+    @Test
+    void getResumeById_ShouldThrowSecurityException_WhenNotAuthorized() {
+        // Arrange
+        UUID resumeId = UUID.randomUUID();
+        Resume resume = new Resume("resume.pdf", "path/to/resume.pdf", "text", user);
+        ReflectionTestUtils.setField(resume, "id", resumeId);
+
+        when(resumeRepository.findById(resumeId)).thenReturn(Optional.of(resume));
+
+        UUID randomUser = UUID.randomUUID();
+
+        // Act & Assert
+        assertThrows(SecurityException.class, () -> resumeService.getResumeById(resumeId, randomUser));
+    }
 }
