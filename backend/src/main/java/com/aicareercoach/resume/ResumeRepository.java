@@ -8,4 +8,7 @@ import java.util.UUID;
 @Repository
 public interface ResumeRepository extends JpaRepository<Resume, UUID> {
     List<Resume> findByUserIdAndIsActiveTrueOrderByUploadedAtDesc(UUID userId);
+
+    /** Counts all resumes uploaded by a user (active and inactive). */
+    long countByUserId(UUID userId);
 }
