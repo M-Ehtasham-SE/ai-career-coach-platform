@@ -26,6 +26,7 @@ public class ResumeScoreService {
     private final ResumeScoreRepository scoreRepository;
     private final ResumeRepository resumeRepository;
     private final OpenAiService openAiService;
+    private final com.aicareercoach.subscription.SubscriptionService subscriptionService;
     private final ObjectMapper objectMapper;
 
     private static final String SYSTEM_PROMPT = """
@@ -43,16 +44,19 @@ public class ResumeScoreService {
     public ResumeScoreService(
             ResumeScoreRepository scoreRepository,
             ResumeRepository resumeRepository,
-            OpenAiService openAiService
+            OpenAiService openAiService,
+            com.aicareercoach.subscription.SubscriptionService subscriptionService
     ) {
         this.scoreRepository = scoreRepository;
         this.resumeRepository = resumeRepository;
         this.openAiService = openAiService;
+        this.subscriptionService = subscriptionService;
         this.objectMapper = new ObjectMapper();
     }
 
     /**
      * Scores a resume using AI for the given job role.
+     * Enforces subscription tier quotas (Free tier: max 3 scorings/month).
      */
     @Transactional
     public ResumeScore scoreResume(UUID resumeId, UUID userId, String jobRole) {
@@ -61,6 +65,14 @@ public class ResumeScoreService {
 
         if (!resume.getUser().getId().equals(userId)) {
             throw new SecurityException("You do not have permission to score this resume.");
+        }
+
+        // Quota check: Free plan users get 3 scorings per month
+        com.aicareercoach.subscription.SubscriptionStatusResponse status = subscriptionService.getStatus(resume.getUser());
+        if (!status.canScore()) {
+            throw new IllegalStateException(
+                    "Free plan scoring limit reached (3/3 used this month). Please upgrade to Premium via EasyPaisa (03229240140) for unlimited resume scoring."
+            );
         }
 
         String rawText = resume.getRawText();

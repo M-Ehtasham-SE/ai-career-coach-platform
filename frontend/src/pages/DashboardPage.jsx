@@ -2,29 +2,47 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import scoreService from '../services/scoreService';
+import subscriptionService from '../services/subscriptionService';
+import EasyPaisaPaymentModal from '../components/EasyPaisaPaymentModal';
 import RoleComparisonChart from '../components/RoleComparisonChart';
-import { LogOut, User, Mail, Shield, Calendar, Sparkles, FileText, Award, Target, MessageSquare, TrendingUp } from 'lucide-react';
+import { LogOut, User, Mail, Shield, Calendar, Sparkles, FileText, Award, Target, MessageSquare, TrendingUp, Zap } from 'lucide-react';
 
 const DashboardPage = () => {
   const { user, logout } = useAuth();
   const [bestScores, setBestScores] = useState({});
+  const [subscription, setSubscription] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const fetchSubscriptionStatus = async () => {
+    try {
+      const res = await subscriptionService.getStatus();
+      if (res && res.status === 'success') {
+        setSubscription(res.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch subscription status:', err);
+    }
+  };
+
   useEffect(() => {
-    const fetchBestScores = async () => {
+    const fetchData = async () => {
       try {
-        const response = await scoreService.getBestScores();
-        if (response && response.status === 'success' && response.data) {
-          setBestScores(response.data);
+        const [scoreRes] = await Promise.all([
+          scoreService.getBestScores(),
+          fetchSubscriptionStatus(),
+        ]);
+        if (scoreRes && scoreRes.status === 'success' && scoreRes.data) {
+          setBestScores(scoreRes.data);
         }
       } catch (error) {
-        console.error('Failed to fetch best scores:', error);
+        console.error('Failed to fetch dashboard data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBestScores();
+    fetchData();
   }, []);
 
   const formatDate = (dateString) => {
@@ -89,6 +107,42 @@ const DashboardPage = () => {
             <p className="text-slate-400 mt-2">
               Your AI-powered career assistant is ready.
             </p>
+          </div>
+
+          {/* Subscription Tier Banner */}
+          <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/40 border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold">
+                {subscription?.isPremium ? '⭐' : '📱'}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-400">Subscription Tier:</span>
+                  <span className={`text-xs font-black px-2.5 py-0.5 rounded-full border ${
+                    subscription?.isPremium
+                      ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+                      : 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                  }`}>
+                    {subscription?.isPremium ? 'PREMIUM (UNLIMITED)' : 'FREE PLAN'}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 mt-1">
+                  {subscription?.isPremium
+                    ? '✓ Unlimited AI scorings & interview sessions active!'
+                    : `Monthly Scorings Used: ${subscription?.monthlyScoringsUsed ?? 0} / ${subscription?.scoringsLimit ?? 3} limit`}
+                </p>
+              </div>
+            </div>
+
+            {!subscription?.isPremium && (
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-md flex items-center gap-1.5 shrink-0"
+              >
+                <span>💸</span> Upgrade via EasyPaisa (03229240140)
+              </button>
+            )}
           </div>
 
           {/* User Details Grid */}
@@ -249,6 +303,13 @@ const DashboardPage = () => {
       <footer className="py-6 border-t border-slate-850 bg-slate-950/40 text-center text-xs text-slate-600">
         &copy; {new Date().getFullYear()} Antigravity. Built with Spring Boot 3 & React 18.
       </footer>
+
+      {/* EasyPaisa Payment Modal */}
+      <EasyPaisaPaymentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onPaymentSuccess={fetchSubscriptionStatus}
+      />
     </div>
   );
 };

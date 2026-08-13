@@ -43,6 +43,9 @@ class ResumeScoreServiceTest {
     @Mock
     private OpenAiService openAiService;
 
+    @Mock
+    private com.aicareercoach.subscription.SubscriptionService subscriptionService;
+
     @InjectMocks
     private ResumeScoreService scoreService;
 
@@ -55,6 +58,12 @@ class ResumeScoreServiceTest {
 
     @BeforeEach
     void setUp() throws Exception {
+        com.aicareercoach.subscription.SubscriptionStatusResponse status = new com.aicareercoach.subscription.SubscriptionStatusResponse(
+                com.aicareercoach.subscription.SubscriptionTier.FREE, false, "03229240140", "Muhammad Ehtasham",
+                1, 3, 2, true, true, null, null
+        );
+        lenient().when(subscriptionService.getStatus(any())).thenReturn(status);
+
         // Build the resume owner
         ownerId = UUID.randomUUID();
         owner = User.builder()

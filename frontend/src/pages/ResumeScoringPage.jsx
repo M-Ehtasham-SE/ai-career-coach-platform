@@ -4,6 +4,7 @@ import { useAuth } from '../context/useAuth';
 import resumeService from '../services/resumeService';
 import scoreService from '../services/scoreService';
 import ScoreDisplay from '../components/ScoreDisplay';
+import EasyPaisaPaymentModal from '../components/EasyPaisaPaymentModal';
 import {
   ArrowLeft,
   Sparkles,
@@ -116,6 +117,8 @@ const ResumeScoringPage = () => {
     loadHistory();
   }, [selectedResumeId]);
 
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
   // ── Analyze ───────────────────────────────────────────────────────────────
   const handleAnalyze = async () => {
     if (!selectedResumeId) {
@@ -142,7 +145,11 @@ const ResumeScoringPage = () => {
         setScoreHistory(prev => [response.data, ...prev]);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Analysis failed. Please try again.');
+      const msg = err.response?.data?.message || 'Analysis failed. Please try again.';
+      setError(msg);
+      if (msg.includes('Free plan scoring limit reached') || msg.includes('upgrade to Premium')) {
+        setIsPaymentModalOpen(true);
+      }
     } finally {
       setAnalyzing(false);
     }
@@ -464,6 +471,16 @@ const ResumeScoringPage = () => {
           </div>
         </div>
       </div>
+
+      {/* EasyPaisa Payment Modal — opens automatically when Free plan limit is reached */}
+      <EasyPaisaPaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        onPaymentSuccess={() => {
+          setIsPaymentModalOpen(false);
+          setError('');
+        }}
+      />
     </div>
   );
 };

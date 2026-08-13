@@ -96,6 +96,7 @@ public class AuthService {
                 user.getEmail(),
                 user.getFullName(),
                 user.getRole(),
+                user.getSubscriptionTier(),
                 user.getCreatedAt()
         );
         return AuthResponse.of(token, jwtExpirationMs, userSummary);

@@ -46,6 +46,16 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false, length = 20)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "subscription_tier", nullable = false, length = 20)
+    private com.aicareercoach.subscription.SubscriptionTier subscriptionTier = com.aicareercoach.subscription.SubscriptionTier.FREE;
+
+    @Column(name = "subscription_expires_at")
+    private LocalDateTime subscriptionExpiresAt;
+
+    @Column(name = "easypaisa_trx_id", length = 100)
+    private String easypaisaTrxId;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -58,6 +68,9 @@ public class User implements UserDetails {
         this.updatedAt = LocalDateTime.now();
         if (this.role == null) {
             this.role = Role.USER;
+        }
+        if (this.subscriptionTier == null) {
+            this.subscriptionTier = com.aicareercoach.subscription.SubscriptionTier.FREE;
         }
     }
 
@@ -147,6 +160,18 @@ public class User implements UserDetails {
         return role;
     }
 
+    public com.aicareercoach.subscription.SubscriptionTier getSubscriptionTier() {
+        return subscriptionTier;
+    }
+
+    public LocalDateTime getSubscriptionExpiresAt() {
+        return subscriptionExpiresAt;
+    }
+
+    public String getEasypaisaTrxId() {
+        return easypaisaTrxId;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -156,8 +181,20 @@ public class User implements UserDetails {
     }
 
     // ============================================
-    // Setters (for profile / password updates)
+    // Setters (for profile / password / subscription updates)
     // ============================================
+
+    public void setSubscriptionTier(com.aicareercoach.subscription.SubscriptionTier subscriptionTier) {
+        this.subscriptionTier = subscriptionTier;
+    }
+
+    public void setSubscriptionExpiresAt(LocalDateTime subscriptionExpiresAt) {
+        this.subscriptionExpiresAt = subscriptionExpiresAt;
+    }
+
+    public void setEasypaisaTrxId(String easypaisaTrxId) {
+        this.easypaisaTrxId = easypaisaTrxId;
+    }
 
     public void setFullName(String fullName) {
         this.fullName = fullName;

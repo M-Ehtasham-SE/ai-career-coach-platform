@@ -55,16 +55,22 @@ public class AuthResponse {
         private String email;
         private String fullName;
         private Role role;
+        private com.aicareercoach.subscription.SubscriptionTier subscriptionTier;
         private LocalDateTime createdAt;
 
-        public static UserSummary of(UUID id, String email, String fullName, Role role, LocalDateTime createdAt) {
+        public static UserSummary of(UUID id, String email, String fullName, Role role, com.aicareercoach.subscription.SubscriptionTier subscriptionTier, LocalDateTime createdAt) {
             UserSummary summary = new UserSummary();
             summary.id = id;
             summary.email = email;
             summary.fullName = fullName;
             summary.role = role;
+            summary.subscriptionTier = subscriptionTier != null ? subscriptionTier : com.aicareercoach.subscription.SubscriptionTier.FREE;
             summary.createdAt = createdAt;
             return summary;
+        }
+
+        public static UserSummary of(UUID id, String email, String fullName, Role role, LocalDateTime createdAt) {
+            return of(id, email, fullName, role, com.aicareercoach.subscription.SubscriptionTier.FREE, createdAt);
         }
 
         public UUID getId() {
@@ -81,6 +87,10 @@ public class AuthResponse {
 
         public Role getRole() {
             return role;
+        }
+
+        public com.aicareercoach.subscription.SubscriptionTier getSubscriptionTier() {
+            return subscriptionTier;
         }
 
         public LocalDateTime getCreatedAt() {
