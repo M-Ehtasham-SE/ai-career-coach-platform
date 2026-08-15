@@ -1,8 +1,16 @@
 import axios from 'axios';
 
-// Use relative URL so requests go through Vite proxy (avoids CORS in dev)
+/**
+ * In development: VITE_API_URL is not set, so baseURL falls back to '/api/v1'
+ * which is proxied to http://localhost:8081 via vite.config.js.
+ *
+ * In production (Render): VITE_API_URL is set to the full Render backend URL
+ * e.g. https://ai-career-coach-backend.onrender.com/api/v1
+ */
+const baseURL = import.meta.env.VITE_API_URL || '/api/v1';
+
 const axiosClient = axios.create({
-  baseURL: '/api/v1',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -27,7 +35,6 @@ axiosClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       const requestUrl = error.config?.url || '';
       // Don't wipe the session if the 401 came from the logout endpoint itself
-      // (it was already publicly accessible, but just in case)
       const isLogoutCall = requestUrl.includes('/auth/logout');
       if (!isLogoutCall) {
         localStorage.removeItem('token');
@@ -43,4 +50,3 @@ axiosClient.interceptors.response.use(
 );
 
 export default axiosClient;
-

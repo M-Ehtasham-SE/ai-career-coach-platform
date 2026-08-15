@@ -50,4 +50,12 @@ public class AuthController {
         // Future: implement token blacklisting for enhanced security.
         return ResponseEntity.ok(ApiResponse.success("Logged out successfully", null));
     }
+
+    /**
+     * GET /auth/health — Render health-check endpoint (public, no auth required).
+     */
+    @GetMapping("/health")
+    public ResponseEntity<ApiResponse<String>> health() {
+        return ResponseEntity.ok(ApiResponse.success("AI Career Coach API is running", "OK"));
+    }
 }
