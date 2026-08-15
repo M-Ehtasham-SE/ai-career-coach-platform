@@ -22,3 +22,5 @@ EXPOSE 8080
 
 # Run Spring Boot app with production profile
 ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+
+
