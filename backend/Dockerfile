@@ -22,8 +22,3 @@ EXPOSE 8080
 
 # Run Spring Boot app with production profile
 ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 6a2b3ce (chore: clean Dockerfile)
