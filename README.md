@@ -2,14 +2,15 @@
 
 > *Personalized, AI-driven career development for the modern professional*
 
-![Deployment Status](https://img.shields.io/badge/Backend-Live-00B4D8?style=flat-square&logo=render)
+![Deployment Status](https://img.shields.io/badge/Deployment-Live-00B4D8?style=flat-square&logo=render)
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.4-6DB33F?style=flat-square&logo=springboot)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql)
 
 ### 🌐 Live Production Links
-- **Live API Endpoint:** [`https://ai-career-coach-backend-5djw.onrender.com/api/v1/auth/health`](https://ai-career-coach-backend-5djw.onrender.com/api/v1/auth/health)
-- **Live Frontend App:** `https://ai-career-coach-frontend.onrender.com` *(Deploying...)*
+- **Live Website:** [`https://ai-career-coach-frontend.onrender.com`](https://ai-career-coach-frontend.onrender.com)
+- **Live API Base:** [`https://ai-career-coach-backend-5djw.onrender.com/api/v1`](https://ai-career-coach-backend-5djw.onrender.com/api/v1)
+- **API Health Check:** [`https://ai-career-coach-backend-5djw.onrender.com/api/v1/auth/health`](https://ai-career-coach-backend-5djw.onrender.com/api/v1/auth/health)
 
 ## 📋 Overview
 
