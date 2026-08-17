@@ -8,8 +8,8 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql)
 
 ### 🌐 Live Production Links
-- **Live Website:** [`https://ai-career-coach-frontend.onrender.com`](https://ai-career-coach-frontend.onrender.com)
-- **Live API Base:** [`https://ai-career-coach-backend-5djw.onrender.com/api/v1`](https://ai-career-coach-backend-5djw.onrender.com/api/v1)
+- **Live Frontend Web App (Netlify):** [`https://artificialintelligencecareercoach.netlify.app/`](https://artificialintelligencecareercoach.netlify.app/)
+- **Live Backend REST API (Render):** [`https://ai-career-coach-backend-5djw.onrender.com/api/v1`](https://ai-career-coach-backend-5djw.onrender.com/api/v1)
 - **API Health Check:** [`https://ai-career-coach-backend-5djw.onrender.com/api/v1/auth/health`](https://ai-career-coach-backend-5djw.onrender.com/api/v1/auth/health)
 
 ## 📋 Overview
@@ -76,7 +76,7 @@ ai-career-coach-platform/
 | 5 | Job Role Targeting | ✅ Complete |
 | 6 | Interview Practice Module | ✅ Complete |
 | 7 | Progress Dashboard and Testing | ✅ Complete |
-| 8 | Documentation and Final Presentation | ⏳ Pending |
+| 8 | Documentation and Deployment | ✅ Complete |
 
 ## 👨‍💻 Author
 
