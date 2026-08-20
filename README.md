@@ -23,7 +23,7 @@ AI Career Coach is a comprehensive web platform that leverages artificial intell
 
 ## 🛠️ Technology Stack
 
-- **Backend**: Java 25, Spring Boot 3.2.4, Spring Security, JPA/Hibernate
+- **Backend**: Java 21, Spring Boot 3.2.4, Spring Security, JPA/Hibernate
 - **Database**: PostgreSQL 16
 - **AI**: OpenAI API (GPT-4o)
 - **Frontend**: React.js 18 + Tailwind CSS (coming soon)
